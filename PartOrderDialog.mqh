@@ -367,3 +367,4 @@ bool PartOrderDialog::OnDefault(const int id,const long &lparam,const double &dp
    return(false);
   }
 //+------------------------------------------------------------------+
+//check
