@@ -11,7 +11,6 @@
 #include <Controls\ListView.mqh>
 #include <Controls\ComboBox.mqh>
 #include <Controls\SpinEdit.mqh>
-#include <Controls\RadioGroup.mqh>
 #include <Controls\CheckGroup.mqh>
 #define INDENT_LEFT                         (11)      // indent from left (with allowance for border width)
 #define INDENT_LEFT2                         (11)      // indent from left (with allowance for border width)
