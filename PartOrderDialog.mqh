@@ -26,7 +26,7 @@
 #define BUTTON_HEIGHT                       (20)      // size by Y coordinate
 //--- for the indication area
 #define EDIT_HEIGHT                         (20)      // size by Y coordinate
-#define LIST_WIGDHT                         (8)      // size by X coordinate
+#define LIST_WIGDHT                         (7)      // size by X coordinate
 //+------------------------------------------------------------------+
 //| Class PartOrderDialog                                               |
 //| Usage: main dialog of the SimplePanel application                |
@@ -40,6 +40,7 @@ private:
    CButton           m_button3;                       // the fixed button object
    CButton           m_button4;                       // the fixed button object
    CListView         m_list_view;                     // the list object
+   CComboBox         m_combo_box;                     // the dropdown list object
    CRadioGroup       m_radio_group;                   // the radio buttons group object
    CCheckGroup       m_check_group;                   // the check box group object
 
@@ -58,6 +59,7 @@ protected:
    bool              CreateButton2(void);
    bool              CreateButton3(void);
    bool              CreateButton4(void);
+   bool              CreateComboBox(void);
    bool              CreateRadioGroup(void);
    bool              CreateCheckGroup(void);
    bool              CreateListView(void);
@@ -68,6 +70,7 @@ protected:
    void              OnClickButton2(void);
    void              OnClickButton3(void);
    void              OnClickButton4(void);
+   void              OnChangeComboBox(void);
    void              OnChangeRadioGroup(void);
    void              OnChangeCheckGroup(void);
    void              OnChangeListView(void);
@@ -81,6 +84,7 @@ ON_EVENT(ON_CLICK,m_button1,OnClickButton1)
 ON_EVENT(ON_CLICK,m_button2,OnClickButton2)
 ON_EVENT(ON_CLICK,m_button3,OnClickButton3)
 ON_EVENT(ON_CLICK,m_button4,OnClickButton4)
+ON_EVENT(ON_CHANGE,m_combo_box,OnChangeComboBox)
 ON_EVENT(ON_CHANGE,m_list_view,OnChangeListView)
 ON_OTHER_EVENTS(OnDefault)
 EVENT_MAP_END(CAppDialog)
@@ -114,6 +118,8 @@ bool PartOrderDialog::Create(const long chart,const string name,const int subwin
       return(false);
    if(!CreateButton4())
       return(false);
+   if(!CreateComboBox())
+      return(false);
    if(!CreateListView())
       return(false);
 //--- succeed
@@ -133,7 +139,7 @@ bool PartOrderDialog::CreateEdit(void)
 Print("m_name+Edit=",m_name+"Edit");
    if(!m_edit.Create(m_chart_id,m_name+"Edit",m_subwin,x1,y1,x2,y2))
       return(false);
-   if(!m_edit.ReadOnly(true))
+   if(!m_edit.ReadOnly(false))
       return(false);
    if(!Add(m_edit))
       return(false);
@@ -252,11 +258,34 @@ bool PartOrderDialog::CreateListView(void)
       for (int i=0; i<=OrdersTotal()-1; i++) 
       {
      if( OrderSelect(i,SELECT_BY_POS,MODE_TRADES)==true)
-     if(! m_list_view.ItemAdd((string)OrderTicket()+" "+OrderSymbol()+" Item "+IntegerToString(i)))
+     if(! m_list_view.ItemAdd("______________"+(string)OrderTicket()+" "+OrderSymbol()+" Item "+IntegerToString(i)))
                return(false);
          }
 
 //--- succeed
+   return(true);
+  }
+  bool PartOrderDialog::CreateComboBox(void)
+  {
+  /*
+//--- coordinates
+   int x1=INDENT_LEFT;
+   int y1=INDENT_TOP+(EDIT_HEIGHT+CONTROLS_GAP_Y)+
+          (BUTTON_HEIGHT+CONTROLS_GAP_Y)+
+          (EDIT_HEIGHT+CONTROLS_GAP_Y);
+   int x2=x1+GROUP_WIDTH;
+   int y2=y1+EDIT_HEIGHT;
+//--- create
+   if(!m_combo_box.Create(m_chart_id,m_name+GetID(),m_subwin,x1,y1,x2,y2))
+      return(false);
+   if(!Add(m_combo_box))
+      return(false);
+//--- fill out with strings
+   for(int i=0;i<16;i++)
+      if(!m_combo_box.ItemAdd("Item "+IntegerToString(i)))
+         return(false);
+//--- succeed
+*/
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -300,7 +329,8 @@ void PartOrderDialog::OnClickButton1(void)
      Print(m_list_view.Width());
        m_list_view.Width(m_list_view.Width()-1);
       }*/
-            m_list_view.Width(LIST_WIGDHT); 
+   //         m_list_view.Width(NULL); 
+            m_list_view.Visible(false); 
     //   Print(m_list_view.Width()-1);
 
 //m_list_view.Width(m_list_view.Width()/2);
@@ -324,7 +354,9 @@ void PartOrderDialog::OnClickButton2(void)
       if(m_list_view.Width()>0)
       { m_list_view.Width(m_list_view.Width()-1);}
       */
-         m_list_view.Width(sx);
+ //        m_list_view.Width(sx);
+ //        m_list_view.Height(LIST_WIGDHT); 
+         m_list_view.Visible(true); 
   }
 //+------------------------------------------------------------------+
 //| Event handler                                                    |
@@ -341,7 +373,7 @@ void PartOrderDialog::OnClickButton3(void)
 //+------------------------------------------------------------------+
 void PartOrderDialog::OnClickButton4(void)
   {
-Print(StringSubstr(m_edit.Text(),0,4));
+m_edit.Text(StringSubstr(m_edit.Text(),0,4));
 //Print(CharToStr(m_edit.Text()[0]));
   // m_edit.Text(__FUNCTION__);
   }
@@ -351,6 +383,11 @@ Print(StringSubstr(m_edit.Text(),0,4));
 void PartOrderDialog::OnChangeListView(void)
   {
    m_edit.Text("Flag"+__FUNCTION__+" \""+m_list_view.Select()+"\"");
+  }
+  
+  void PartOrderDialog::OnChangeComboBox(void)
+  {
+ //  m_edit.Text(__FUNCTION__+" \""+m_combo_box.Select()+"\"");
   }
 //+------------------------------------------------------------------+
 //| Event handler                                                    |
