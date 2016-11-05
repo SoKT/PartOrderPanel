@@ -154,7 +154,7 @@ bool PartOrderDialog::CreateButton1(void)
 //--- create
    if(!m_button1.Create(m_chart_id,m_name+"Button1",m_subwin,x1,y1,x2,y2))
       return(false);
-   if(!m_button1.Text("Выключить"))
+   if(!m_button1.Text("Off"))
       return(false);
    if(!Add(m_button1))
       return(false);
@@ -175,7 +175,7 @@ bool PartOrderDialog::CreateButton2(void)
 //--- create
    if(!m_button2.Create(m_chart_id,m_name+"Button2",m_subwin,x1,y1,x2,y2))
       return(false);
-   if(!m_button2.Text("Линия уровня"))
+   if(!m_button2.Text("Line grade"))
       return(false);
    if(!Add(m_button2))
       return(false);
@@ -196,7 +196,7 @@ bool PartOrderDialog::CreateButton3(void)
 //--- create
    if(!m_button3.Create(m_chart_id,m_name+"Button3",m_subwin,x1,y1,x2,y2))
       return(false);
-   if(!m_button3.Text("Убрать линии"))
+   if(!m_button3.Text("Delete line"))
       return(false);
    if(!Add(m_button3))
       return(false);
@@ -218,7 +218,7 @@ bool PartOrderDialog::CreateButton4(void)
 //--- create
    if(!m_button4.Create(m_chart_id,m_name+"Button4",m_subwin,x1,y1,x2,y2))
       return(false);
-   if(!m_button4.Text("Стоп лосс"))
+   if(!m_button4.Text("Stop loss"))
       return(false);
    if(!Add(m_button4))
       return(false);
