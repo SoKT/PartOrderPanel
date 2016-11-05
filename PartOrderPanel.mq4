@@ -1,6 +1,6 @@
 #property copyright "Copyright 2016, 05 November"
 #property link      "Teemofey@inbox.ru"
-#property version   "1.1"
+#property version   "1.2"
 #property strict
 
 #property indicator_separate_window
