@@ -152,6 +152,9 @@ bool PartOrderDialog::CreateEdit(void)
       return(false);
    m_edit.Alignment(WND_ALIGN_WIDTH,INDENT_LEFT,0,INDENT_RIGHT+BUTTON_WIDTH+CONTROLS_GAP_X,0);
 //--- succeed
+
+
+   
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -312,8 +315,9 @@ bool PartOrderDialog::CreateListView(void)
    for(int i=0; i<=OrdersTotal()-1; i++)
      {
       if(OrderSelect(i,SELECT_BY_POS,MODE_TRADES)==true)
-         if(!m_list_view.ItemAdd("______________"+(string)OrderTicket()+" "+OrderSymbol()+" Item "+IntegerToString(i)))
-            return(false);
+//         if(!m_list_view.ItemAdd("______________"+(string)OrderTicket()+" "+OrderSymbol()+" Item "+IntegerToString(i)+"No :"))
+         if(!m_list_view.ItemAdd(OrderSymbol()+" Item"+IntegerToString(i)+":20  :50  :No :No :1.5    "))
+              return(false);
      }
 
 //--- succeed
@@ -338,12 +342,16 @@ bool PartOrderDialog::CreateComboBox(void)
    if(!Add(m_combo_box))
       return(false);
 //--- fill out with strings
-   for(int i=0;i<5;i++)
-      if(!m_combo_box.ItemAdd("Item "+IntegerToString(i)))
+ /*  for(int i=0;i<=OrdersTotal()-1;i++)
+      if(!m_combo_box.ItemAdd(m_list_view.Select(i)))
          return(false);
-//--- succeed
-m_combo_box.SelectByText("Item 1");
+         */
+         m_combo_box.ItemAdd("Yes");
 
+         m_combo_box.ItemAdd("No ");
+
+
+m_combo_box.SelectByText("Yes");
    return(true);
   }
 //+------------------------------------------------------------------+
@@ -386,12 +394,16 @@ void PartOrderDialog::OnClickButton1(void)
          m_edit.Text("Please select something");
       else
       {      
+m_combo_box.SelectByText(StringSubstr(m_list_view.Select(),23,3));
+//m_combo_box.SelectByText("No ");
          m_button1.Visible(false);
          m_button2.Visible(false);
          m_button3.Visible(false);
          m_button4.Visible(true);
          m_list_view.Visible(false);
       }
+//         m_edit.Text(PartOrderDialog.Top());
+
 //   m_edit.Text(__FUNCTION__);
 //while (m_list_view.Width()<800)
 /*    for (int i=0; i<=m_list_view.Width(); i++) 
@@ -457,10 +469,12 @@ void PartOrderDialog::OnClickButton2(void)
 //+------------------------------------------------------------------+
 void PartOrderDialog::OnClickButton3(void)
   {
-   if(m_button3.Pressed())
+ // m_list_view.Select();
+     m_edit.Text(StringSubstr(m_list_view.Select(),23,3));
+ /*  if(m_button3.Pressed())
       m_edit.Text(__FUNCTION__+"On");
    else
-      m_edit.Text(__FUNCTION__+"Off");
+      m_edit.Text(__FUNCTION__+"Off");*/
   }
 //+------------------------------------------------------------------+
 //| Event handler                                                    |
