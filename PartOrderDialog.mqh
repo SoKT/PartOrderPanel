@@ -33,7 +33,7 @@
 //| Usage: main dialog of the SimplePanel application                |
 //+------------------------------------------------------------------+
 class PartOrderDialog : public CAppDialog
-  {
+{
 private:
    CEdit             m_edit;                          // the display field object
    CEdit             m_static_edit[6];                          // the display field object
@@ -72,10 +72,8 @@ protected:
    void              OnChangeCheckGroup(void);
    void              OnChangeListView(void);
    bool              OnDefault(const int id,const long &lparam,const double &dparam,const string &sparam);
-  };
-//+------------------------------------------------------------------+
-//| Event Handling                                                   |
-//+------------------------------------------------------------------+
+};
+
 EVENT_MAP_BEGIN(PartOrderDialog)
 ON_EVENT(ON_CLICK,m_button[0],OnClickButton1)
 ON_EVENT(ON_CLICK,m_button[1],OnClickButton2)
@@ -87,23 +85,11 @@ ON_EVENT(ON_CHANGE,m_combo_box,OnChangeComboBox)
 ON_EVENT(ON_CHANGE,m_list_view,OnChangeListView)
 ON_OTHER_EVENTS(OnDefault)
 EVENT_MAP_END(CAppDialog)
-//+------------------------------------------------------------------+
-//| Constructor                                                      |
-//+------------------------------------------------------------------+
-PartOrderDialog::PartOrderDialog(void)
-  {
-  }
-//+------------------------------------------------------------------+
-//| Destructor                                                       |
-//+------------------------------------------------------------------+
-PartOrderDialog::~PartOrderDialog(void)
-  {
-  }
-//+------------------------------------------------------------------+
-//| Create                                                           |
-//+------------------------------------------------------------------+
+PartOrderDialog::PartOrderDialog(void){}
+PartOrderDialog::~PartOrderDialog(void){}
+
 bool PartOrderDialog::Create(const long chart,const string name,const int subwin,const int x1,const int y1,const int x2,const int y2)
-  {
+{
    if(!CAppDialog::Create(chart,name,subwin,x1,y1,x2,y2))
       return(false);
 //--- create dependent controls
@@ -121,12 +107,10 @@ bool PartOrderDialog::Create(const long chart,const string name,const int subwin
       return(false);
 //--- succeed
    return(true);
-  }
-//+------------------------------------------------------------------+
-//| Create the display field                                         |
-//+------------------------------------------------------------------+
+}
+
 bool PartOrderDialog::CreateEdit(void)
-  {
+{
 //--- coordinates
    int x1=INDENT_LEFT;
    int y1=INDENT_TOP+(BUTTON_HEIGHT+CONTROLS_GAP_Y)*3;
@@ -146,82 +130,39 @@ bool PartOrderDialog::CreateEdit(void)
 
    
    return(true);
-  }
-//+------------------------------------------------------------------+
-//| Create the "Button1" button                                      |
-//+------------------------------------------------------------------+
+}
+
 bool PartOrderDialog::CreateButtons(void)
-   {
+{
    string button_text[]={"Settings","Delete","Add","List view"};
-      for(int i=0; i<=3; i++)
-      {
-         int x1=ClientAreaWidth()-(INDENT_RIGHT+BUTTON_WIDTH);
-         int y1=INDENT_TOP+(BUTTON_HEIGHT+CONTROLS_GAP_Y)*i;
-         int x2=x1+BUTTON_WIDTH;
-         int y2=y1+BUTTON_HEIGHT;
-         m_button[i].Create(m_chart_id,m_name+"Button"+i,m_subwin,x1,y1,x2,y2);
-         m_button[i].Text(button_text[i]);
-         Add(m_button[i]);
-         m_button[i].Alignment(WND_ALIGN_RIGHT,0,0,INDENT_RIGHT,0);
-      }
+   for(int i=0; i<=3; i++)
+   {
+      int x1=ClientAreaWidth()-(INDENT_RIGHT+BUTTON_WIDTH);
+      int y1=INDENT_TOP+(BUTTON_HEIGHT+CONTROLS_GAP_Y)*i;
+      int x2=x1+BUTTON_WIDTH;
+      int y2=y1+BUTTON_HEIGHT;
+      m_button[i].Create(m_chart_id,m_name+"Button"+i,m_subwin,x1,y1,x2,y2);
+      m_button[i].Text(button_text[i]);
+      Add(m_button[i]);
+      m_button[i].Alignment(WND_ALIGN_RIGHT,0,0,INDENT_RIGHT,0);
+   }
    m_button[3].Visible(false);
    return(true);
-  }
-  bool PartOrderDialog::CreateRadioGroup(void)
-  {
-  /*
-   int sx=(ClientAreaWidth()-(INDENT_LEFT+INDENT_RIGHT+BUTTON_WIDTH))/3-CONTROLS_GAP_X;
-//--- coordinates
-   int x1=INDENT_LEFT;
-   int y1=INDENT_TOP+EDIT_HEIGHT+CONTROLS_GAP_Y;
-   int x2=x1+sx;
-   int y2=ClientAreaHeight()-INDENT_BOTTOM;
-//--- create
-   if(!m_radio_group.Create(m_chart_id,m_name+"RadioGroup",m_subwin,x1,y1,x2,y2))
-      return(false);
-   if(!Add(m_radio_group))
-      return(false);
-   m_radio_group.Alignment(WND_ALIGN_HEIGHT,0,y1,0,INDENT_BOTTOM);
-//--- fill out with strings
-   for(int i=0;i<4;i++)
-      if(!m_radio_group.AddItem("Item "+IntegerToString(i),1<<i))
-         return(false);
-//--- succeed
-*/
+}
+  
+bool PartOrderDialog::CreateRadioGroup(void)
+{
    return(true);
-  }
-//+------------------------------------------------------------------+
-//| Create the "CheckGroup" element                                  |
-//+------------------------------------------------------------------+
+}
+
 bool PartOrderDialog::CreateCheckGroup(void)
-  {
-  /*
-   int sx=(ClientAreaWidth()-(INDENT_LEFT+INDENT_RIGHT+BUTTON_WIDTH))/3-CONTROLS_GAP_X;
-//--- coordinates
-   int x1=INDENT_LEFT+sx+CONTROLS_GAP_X;
-   int y1=INDENT_TOP+EDIT_HEIGHT+CONTROLS_GAP_Y;
-   int x2=x1+sx;
-   int y2=ClientAreaHeight()-INDENT_BOTTOM;
-//--- create
-   if(!m_check_group.Create(m_chart_id,m_name+"CheckGroup",m_subwin,x1,y1,x2,y2))
-      return(false);
-   if(!Add(m_check_group))
-      return(false);
-   m_check_group.Alignment(WND_ALIGN_HEIGHT,0,y1,0,INDENT_BOTTOM);
-//--- fill out with strings
-   for(int i=0;i<4;i++)
-      if(!m_check_group.AddItem("Item "+IntegerToString(i),1<<i))
-         return(false);
-//--- succeed
-*/
+{
    return(true);
-  }
-//+------------------------------------------------------------------+
-//| Create the "ListView" element                                    |
-//+------------------------------------------------------------------+
+}
+  
 bool PartOrderDialog::CreateListView(void)
-  {
-  string Type_Order;
+{
+   string Type_Order;
    int sx=(ClientAreaWidth()-(INDENT_LEFT+INDENT_RIGHT+BUTTON_WIDTH))/3-CONTROLS_GAP_X;
 //--- coordinates
    int x1=INDENT_LEFT;
@@ -237,224 +178,96 @@ bool PartOrderDialog::CreateListView(void)
    m_list_view.Alignment(WND_ALIGN_WIDTH,INDENT_LEFT,0,INDENT_RIGHT+BUTTON_WIDTH+CONTROLS_GAP_X,0);
 //--- fill out with strings
    for(int i=0; i<=OrdersTotal()-1; i++)
-     {
+   {
       if(OrderSelect(i,SELECT_BY_POS,MODE_TRADES)==true)
 //         if(!m_list_view.ItemAdd("______________"+(string)OrderTicket()+" "+OrderSymbol()+" Item "+IntegerToString(i)+"No :"))
    if (OrderType()==1)
       Type_Order="SELL";
    else  Type_Order="BUY ";
-         if(!m_list_view.ItemAdd(OrderSymbol()+" Item"+IntegerToString(i)+":20  :50  :No :No :"+Type_Order+":1.5    "))
-              return(false);
-     }
-
-//--- succeed
+      if(!m_list_view.ItemAdd(OrderSymbol()+" Item"+IntegerToString(i)+":20  :50  :No :No :"+Type_Order+":1.5    "))
+         return(false);
+   }
    return(true);
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
-bool PartOrderDialog::CreateComboBox(void)
-  {
+}
 
-//--- coordinates
+bool PartOrderDialog::CreateComboBox(void)
+{
    int x1=INDENT_LEFT;
    int y1=INDENT_TOP;//+(EDIT_HEIGHT+CONTROLS_GAP_Y);
           //+(BUTTON_HEIGHT+CONTROLS_GAP_Y);
           //+(EDIT_HEIGHT+CONTROLS_GAP_Y);
    int x2=x1+BOX_WIDTH;
    int y2=y1+EDIT_HEIGHT;
-//--- create
    if(!m_combo_box.Create(m_chart_id,m_name+"ComboBox",m_subwin,x1,y1,x2,y2))
       return(false);
    if(!Add(m_combo_box))
       return(false);
-//--- fill out with strings
- /*  for(int i=0;i<=OrdersTotal()-1;i++)
-      if(!m_combo_box.ItemAdd(m_list_view.Select(i)))
-         return(false);
-         */
-         m_combo_box.ItemAdd("Yes");
-
-         m_combo_box.ItemAdd("No ");
-
-
-m_combo_box.SelectByText("Yes");
+   m_combo_box.ItemAdd("Yes");
+   m_combo_box.ItemAdd("No ");
+   m_combo_box.SelectByText("Yes");
    return(true);
-  }
-//+------------------------------------------------------------------+
-//| Handler of resizing                                              |
-//+------------------------------------------------------------------+
+}
+
 bool PartOrderDialog::OnResize(void)
-  {
-
-//--- call method of parent class
+{
    if(!CAppDialog::OnResize()) return(false);
-//--- coordinates
-/*
-   int x=ClientAreaLeft()+INDENT_LEFT;
-   int y=m_list_view.Top();
-   int sx=(ClientAreaWidth()-(INDENT_LEFT+INDENT_RIGHT+BUTTON_WIDTH))-CONTROLS_GAP_X;
-//--- move and resize the "RadioGroup" element
-//  m_radio_group.Move(x,y);
-// m_radio_group.Width(sx);
-//--- move and resize the "CheckGroup" element
-   x=ClientAreaLeft()+INDENT_LEFT+sx+CONTROLS_GAP_X;
-//  m_check_group.Move(x,y);
-// m_check_group.Width(sx);
-//--- move and resize the "ListView" element
-//  x=ClientAreaLeft()+ClientAreaWidth()-(sx+INDENT_RIGHT+BUTTON_WIDTH+CONTROLS_GAP_X);
-   x=ClientAreaLeft()+INDENT_LEFT;
-   m_list_view.Move(x,y);
-   if(m_list_view.Width()!=LIST_WIGDHT && m_list_view.Width()!=sx)
-      m_list_view.Width(sx);
-//--- succeed
-*/
    return(true);
+}
 
-  }
-//+------------------------------------------------------------------+
-//| Event handler                                                    |
-//+------------------------------------------------------------------+
 void PartOrderDialog::OnClickButton1(void)
-  {
-      if(m_list_view.Select()=="")
-         m_edit.Text("Please select something");
-      else
-      {      
-m_combo_box.SelectByText(StringSubstr(m_list_view.Select(),23,3));
-//m_combo_box.SelectByText("No ");
-         m_button[0].Visible(false);
-         m_button[1].Visible(false);
-         m_button[2].Visible(false);
-         m_button[3].Visible(true);
-         m_list_view.Visible(false);
-      }
-//         m_edit.Text(PartOrderDialog.Top());
-
-//   m_edit.Text(__FUNCTION__);
-//while (m_list_view.Width()<800)
-/*    for (int i=0; i<=m_list_view.Width(); i++) 
-      {
-     Print(m_list_view.Width());
-       m_list_view.Width(m_list_view.Width()-1);
-      }*/
-//         m_list_view.Width(NULL); 
-
-//   Print(m_list_view.Width()-1);
-
-//m_list_view.Width(m_list_view.Width()/2);
-  }
-//+------------------------------------------------------------------+
-//| Event handler                                                    |
-//+------------------------------------------------------------------+
-void PartOrderDialog::OnClickButton2(void)
-   {
+{
    if(m_list_view.Select()=="")
       m_edit.Text("Please select something");
    else
-      {
-      m_list_view.ItemDelete(m_list_view.Current());
-
-
-
-
-
-
-
-
-    //  bool select1=false;
-   //      color  text_color=(select1) ? CONTROLS_LISTITEM_COLOR_TEXT_SEL : CONTROLS_LISTITEM_COLOR_TEXT;
-  // color  back_color=(select1) ? CONTROLS_LISTITEM_COLOR_BG_SEL : CONTROLS_LISTITEM_COLOR_BG;
-  //             m_list_view.ItemsClear();
-  //             m_list_view.Select()
-    //              EventChartCustom(-1,4,m_id,0.0,m_name);
-               
-    //     m_list_view.Visible(false);
-     //    m_list_view.Visible(true);
-//      m_list_view.Select(3);
-      }     
-//  m_edit.Text(__FUNCTION__);
-//   int sx=(ClientAreaWidth()-(INDENT_LEFT+INDENT_RIGHT+BUTTON_WIDTH))-CONTROLS_GAP_X;
-//   int i=0;
-/*while (m_list_view.Width()<800)
- //     for (int i=0; i<=sx; i++) 
-      {
-         Print(i);
-         Sleep(1000);       
-         m_list_view.Width();   
-         i++;     
-      }
-      if(m_list_view.Width()>0)
-      { m_list_view.Width(m_list_view.Width()-1);}
-      */
-//        m_list_view.Width(sx);
-//        m_list_view.Height(LIST_WIGDHT); 
-//   m_list_view.Visible(true);
-  }
-//+------------------------------------------------------------------+
-//| Event handler                                                    |
-//+------------------------------------------------------------------+
-void PartOrderDialog::OnClickButton3(void)
-  {
- // m_list_view.Select();
-     m_edit.Text(StringSubstr(m_list_view.Select(),23,3));
- /*  if(m_button3.Pressed())
-      m_edit.Text(__FUNCTION__+"On");
+   {      
+      m_combo_box.SelectByText(StringSubstr(m_list_view.Select(),23,3));
+      for(int i=0; i<=3; i++)
+         {m_button[i].Visible(!m_button[i].IsVisible());}
+      m_list_view.Visible(false);
+   }
+}
+   
+void PartOrderDialog::OnClickButton2(void)
+{
+   if(m_list_view.Select()=="")
+      m_edit.Text("Please select something");
    else
-      m_edit.Text(__FUNCTION__+"Off");*/
-  }
-//+------------------------------------------------------------------+
-//| Event handler                                                    |
-//+------------------------------------------------------------------+
+      m_list_view.ItemDelete(m_list_view.Current());
+}
+   
+void PartOrderDialog::OnClickButton3(void)
+{
+     m_edit.Text(StringSubstr(m_list_view.Select(),23,3));
+}
+
 void PartOrderDialog::OnClickButton4(void)
-  {
+{
    m_edit.Text(StringSubstr(m_edit.Text(),0,4));
-//Print(CharToStr(m_edit.Text()[0]));
-// m_edit.Text(__FUNCTION__);
-//m_combo_box.Width(m_combo_box.Width()*2);
-         m_button[0].Visible(true);
-         m_button[1].Visible(true);
-         m_button[2].Visible(true);
-         m_button[3].Visible(false);
-     m_list_view.Visible(true);
-  }
-//+------------------------------------------------------------------+
-//| Event handler                                                    |
-//+------------------------------------------------------------------+
+   for(int i=0; i<=3; i++)
+      {m_button[i].Visible(!m_button[i].IsVisible());}
+   m_list_view.Visible(true);
+}
+
 void PartOrderDialog::OnChangeListView(void)
-  {
+{
    m_edit.Text("Flag"+__FUNCTION__+" \""+m_list_view.Select()+"\"");
-  }
-//+------------------------------------------------------------------+
-//|                                                                  |
-//+------------------------------------------------------------------+
+}
+
 void PartOrderDialog::OnChangeComboBox(void)
-  {
+{
 //  m_edit.Text(__FUNCTION__+" \""+m_combo_box.Select()+"\"");
-  }
-//+------------------------------------------------------------------+
-//| Event handler                                                    |
-//+------------------------------------------------------------------+
-//+------------------------------------------------------------------+
-//| Rest events handler                                              |
-//+------------------------------------------------------------------+
+}
+
 void PartOrderDialog::OnChangeRadioGroup(void)
-  {
+{
    m_edit.Text(__FUNCTION__+" : Value="+IntegerToString(m_radio_group.Value()));
-  }
-//+------------------------------------------------------------------+
-//| Event handler                                                    |
-//+------------------------------------------------------------------+
+}
+
 void PartOrderDialog::OnChangeCheckGroup(void)
-  {
+{
    m_edit.Text(__FUNCTION__+" : Value="+IntegerToString(m_check_group.Value()));
-  }
+}
 bool PartOrderDialog::OnDefault(const int id,const long &lparam,const double &dparam,const string &sparam)
-  {
-//--- restore buttons' states after mouse move'n'click
-// if(id==CHARTEVENT_CLICK)
-//  m_radio_group.RedrawButtonStates();
-//--- let's handle event by parent
+{
    return(false);
-  }
-//+------------------------------------------------------------------+
+}
