@@ -3,7 +3,6 @@
 //|                                      Copyright 2016, 05 November |
 //|                                                Teemofey@inbox.ru |
 //+------------------------------------------------------------------+
-#include <Controls\Wnd.mqh>
 #include <Controls\Dialog.mqh>
 #include <Controls\Button.mqh>
 #include <Controls\Edit.mqh>
@@ -48,6 +47,7 @@ private:
    CRadioGroup       m_radio_group;                   // the radio buttons group object
    CCheckGroup       m_check_group;                   // the check box group object
    bool              f_l;                             // Flag language
+   string            order_options;                   // Current order options
 public:
                      PartOrderDialog(void);
                     ~PartOrderDialog(void);
@@ -87,10 +87,10 @@ ON_EVENT(ON_CHANGE,m_radio_group,OnChangeRadioGroup)
 ON_EVENT(ON_CHANGE,m_check_group,OnChangeCheckGroup)
 ON_EVENT(ON_CHANGE,m_combo_box[0],OnChangeOrder)
 ON_EVENT(ON_CHANGE,m_combo_box[1],OnChangeOrder)
-ON_EVENT(ON_CHANGE,m_edit[6],OnChangeOrder)
-ON_EVENT(ON_CHANGE,m_edit[7],OnChangeOrder)
-ON_EVENT(ON_CHANGE,m_edit[8],OnChangeOrder)
-ON_EVENT(ON_CHANGE,m_edit[9],OnChangeOrder)
+//ON_EVENT(ON_END_EDIT,m_edit[6],OnChangeOrder)
+//ON_EVENT(ON_END_EDIT,m_edit[7],OnChangeOrder)
+//ON_EVENT(ON_END_EDIT,m_edit[8],OnChangeOrder)
+//ON_EVENT(ON_END_EDIT,m_edit[9],OnChangeOrder)
 ON_EVENT(ON_CHANGE,m_list_view,OnChangeListView)
 ON_OTHER_EVENTS(OnDefault)
 EVENT_MAP_END(CAppDialog)
@@ -214,7 +214,7 @@ bool PartOrderDialog::CreateListView(void)
    if (OrderType()==1)
       Type_Order="SELL";
    else  Type_Order="BUY ";
-      if(!m_list_view.ItemAdd(OrderSymbol()+" Item"+IntegerToString(i)+":20  :50  :No :No :"+Type_Order+":1.5    "))
+      if(!m_list_view.ItemAdd("#"+IntegerToString(i+1)+" "+OrderTicket()+" 1:"+OrderSymbol()+" 2:20 3:50 4:1.5 5:No 6:No 7:"+Type_Order))
          return(false);
    }
    return(true);
@@ -235,7 +235,7 @@ bool PartOrderDialog::CreateComboBox(void)
       if(!Add(m_combo_box[i]))
          return(false);
       m_combo_box[i].ItemAdd("Yes");
-      m_combo_box[i].ItemAdd("No ");
+      m_combo_box[i].ItemAdd("No");
       m_combo_box[i].SelectByText("Yes");
    }
    return(true);
@@ -253,10 +253,22 @@ void PartOrderDialog::OnClickButton1(void)
       m_edit[10].Text("Please select something");
    else
    {      
-      m_combo_box[0].SelectByText(StringSubstr(m_list_view.Select(),23,3));
-      m_combo_box[1].SelectByText(StringSubstr(m_list_view.Select(),23,3));    
-      m_edit[6].Text(StringSubstr(m_list_view.Select(),0,6));  
-      for(int i=0; i<=3; i++)
+      m_edit[10].Text(m_list_view.Select());
+      for(int i=1; i<=6; i++)
+      {
+         int j=StringFind(m_list_view.Select(),i+":")+2;
+         int j1=StringFind(m_list_view.Select(),i+1+":")-1;
+         if(i<5)
+         m_edit[i+5].Text(StringSubstr(m_list_view.Select(),j,j1-j));  
+         else
+         m_combo_box[i-5].SelectByText(StringSubstr(m_list_view.Select(),j,j1-j));
+//         Print(StringSubstr(m_list_view.Select(),j,j1-j)+(6-i));
+      }
+      m_edit[10].Text(m_list_view.Select());
+//      m_edit[10].Text(StringFind(m_list_view.Select(),"1:"));
+  //    m_combo_box[0].SelectByText(StringSubstr(m_list_view.Select(),23,3));
+   //   m_combo_box[1].SelectByText(StringSubstr(m_list_view.Select(),23,3));    
+      for(i=0; i<=3; i++)
          {m_button[i].Visible(!m_button[i].IsVisible());}
       m_list_view.Visible(false);
    }
@@ -277,10 +289,15 @@ void PartOrderDialog::OnClickButton3(void)
 
 void PartOrderDialog::OnClickButton4(void)
 {
-   m_edit[10].Text(StringSubstr(m_edit[10].Text(),0,4));
+   m_list_view.ItemAdd(order_options);
+   m_list_view.ItemDelete(m_list_view.Current());
+
+//   m_edit[10].Text(StringSubstr(m_edit[10].Text(),0,4));
    for(int i=0; i<=3; i++)
       {m_button[i].Visible(!m_button[i].IsVisible());}
    m_list_view.Visible(true);
+ //  m_edit[10].Text(StringToInteger(    ));
+
 }
 
 void PartOrderDialog::OnChangeListView(void)
@@ -290,17 +307,27 @@ void PartOrderDialog::OnChangeListView(void)
 
 void PartOrderDialog::OnChangeOrder(void)
 {
+   order_options=StringSubstr(m_list_view.Select(),0,13);
+   for(int i=0; i<=5; i++)
+   {
+      if(i<4)
+         {order_options+=" "+(i+1)+":"+m_edit[i+6].Text();}  
+      else
+        { order_options+=" "+(i+1)+":"+m_combo_box[i-4].Select();} 
+//        Print(order_options); 
+   }
+   order_options+=" 7:SELL";
 //  m_edit.Text(__FUNCTION__+" \""+m_combo_box.Select()+"\"");
 }
 
 void PartOrderDialog::OnChangeRadioGroup(void)
 {
-   m_edit[10].Text(__FUNCTION__+" : Value="+IntegerToString(m_radio_group.Value()));
+ //  m_edit[10].Text(__FUNCTION__+" : Value="+IntegerToString(m_radio_group.Value()));
 }
 
 void PartOrderDialog::OnChangeCheckGroup(void)
 {
-   m_edit[10].Text(__FUNCTION__+" : Value="+IntegerToString(m_check_group.Value()));
+ //  m_edit[10].Text(__FUNCTION__+" : Value="+IntegerToString(m_check_group.Value()));
 }
 bool PartOrderDialog::OnDefault(const int id,const long &lparam,const double &dparam,const string &sparam)
 {
