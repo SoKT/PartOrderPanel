@@ -8,7 +8,7 @@ PartOrderDialog ExtDialog;
 
 int OnInit(void) 
   {
-   if(!ExtDialog.Create(0,"Close Part Order Indicator",
+   if(!ExtDialog.Create(0,"RU",
                         0,50,50,390,200))
      return(INIT_FAILED);
    if(!ExtDialog.Run())

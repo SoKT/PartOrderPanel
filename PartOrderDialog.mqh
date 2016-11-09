@@ -3,6 +3,7 @@
 //|                                      Copyright 2016, 05 November |
 //|                                                Teemofey@inbox.ru |
 //+------------------------------------------------------------------+
+#include <Controls\Wnd.mqh>
 #include <Controls\Dialog.mqh>
 #include <Controls\Button.mqh>
 #include <Controls\Edit.mqh>
@@ -28,8 +29,13 @@
 #define EDIT_HEIGHT                         (20)      // size by Y coordinate
 #define LIST_WIGDHT                         (7)      // size by X coordinate
 #define BOX_WIDTH                           (70)      // size by X coordinate
+const string window_name[2]={"Close Part Order Indicator","Close Part Order IndicatorRu"};
+const string edit_text[2][6]={{"Grafic","Stop Loss","Profit","Lots Close","Show line","Show Loss"},
+                        {"GraficRu","Stop LossRu","ProfitRu","Lots CloseRu","Show lineRu","Show LossRu"}};
+const string button_text[2][4]={{"Settings","Delete","Add","List view"},
+                          {"SettingsRu","DeleteRu","AddRu","List viewRu"}};
 //+------------------------------------------------------------------+
-//| Class PartOrderDialog                                               |
+//| Class PartOrderDialog                                            |
 //| Usage: main dialog of the SimplePanel application                |
 //+------------------------------------------------------------------+
 class PartOrderDialog : public CAppDialog
@@ -41,7 +47,7 @@ private:
    CComboBox         m_combo_box[2];                     // the dropdown list object
    CRadioGroup       m_radio_group;                   // the radio buttons group object
    CCheckGroup       m_check_group;                   // the check box group object
-
+   bool              f_l;                             // Flag language
 public:
                      PartOrderDialog(void);
                     ~PartOrderDialog(void);
@@ -93,7 +99,8 @@ PartOrderDialog::~PartOrderDialog(void){}
 
 bool PartOrderDialog::Create(const long chart,const string name,const int subwin,const int x1,const int y1,const int x2,const int y2)
 {
-   if(!CAppDialog::Create(chart,name,subwin,x1,y1,x2,y2))
+   if (name=="RU"){f_l=false;}else{f_l=true;}
+   if(!CAppDialog::Create(chart,window_name[f_l],subwin,x1,y1,x2,y2))
       return(false);
 //--- create dependent controls
    if(!CreateEdit())
@@ -114,13 +121,10 @@ bool PartOrderDialog::Create(const long chart,const string name,const int subwin
 
 bool PartOrderDialog::CreateEdit(void)
 {
-   string m_edit_string[]={"1","1","1","1","1","1"};
    int x1=INDENT_LEFT;
    int y1=INDENT_TOP+(BUTTON_HEIGHT+CONTROLS_GAP_Y)*3;
    int x2=ClientAreaWidth()-(INDENT_RIGHT+BUTTON_WIDTH+CONTROLS_GAP_X);
    int y2=y1+EDIT_HEIGHT;
-//--- create
-   Print("m_name+Edit=",m_name+"Edit");
    if(!m_edit[10].Create(m_chart_id,m_name+"Edit",m_subwin,x1,y1,x2,y2))
       return(false);
    if(!m_edit[10].ReadOnly(false))
@@ -139,8 +143,7 @@ bool PartOrderDialog::CreateEdit(void)
       else
       {
          m_edit[i].ReadOnly(true);
-         m_edit[i].TextAlign(ALIGN_CENTER);
-         m_edit[i].Text(m_edit_string[i]);
+         m_edit[i].Text(edit_text[f_l][i]);
       }
       x1=INDENT_LEFT+(CONTROLS_GAP_Y+BOX_WIDTH)*(i-6*j);
       y1=INDENT_TOP+(EDIT_HEIGHT+CONTROLS_GAP_Y)*j;
@@ -153,7 +156,7 @@ bool PartOrderDialog::CreateEdit(void)
          return(false);
       if(!Add(m_edit[i]))
          return(false);
-
+      m_edit[i].TextAlign(ALIGN_CENTER);
   //    m_edit.Alignment(WND_ALIGN_WIDTH,INDENT_LEFT,0,INDENT_RIGHT+BUTTON_WIDTH+CONTROLS_GAP_X,0);
    }
    
@@ -162,7 +165,6 @@ bool PartOrderDialog::CreateEdit(void)
 
 bool PartOrderDialog::CreateButtons(void)
 {
-   string button_text[]={"Settings","Delete","Add","List view"};
    for(int i=0; i<=3; i++)
    {
       int x1=ClientAreaWidth()-(INDENT_RIGHT+BUTTON_WIDTH);
@@ -170,7 +172,7 @@ bool PartOrderDialog::CreateButtons(void)
       int x2=x1+BUTTON_WIDTH;
       int y2=y1+BUTTON_HEIGHT;
       m_button[i].Create(m_chart_id,m_name+"Button"+i,m_subwin,x1,y1,x2,y2);
-      m_button[i].Text(button_text[i]);
+      m_button[i].Text(button_text[f_l][i]);
       Add(m_button[i]);
       m_button[i].Alignment(WND_ALIGN_RIGHT,0,0,INDENT_RIGHT,0);
    }
@@ -252,6 +254,8 @@ void PartOrderDialog::OnClickButton1(void)
    else
    {      
       m_combo_box[0].SelectByText(StringSubstr(m_list_view.Select(),23,3));
+      m_combo_box[1].SelectByText(StringSubstr(m_list_view.Select(),23,3));    
+      m_edit[6].Text(StringSubstr(m_list_view.Select(),0,6));  
       for(int i=0; i<=3; i++)
          {m_button[i].Visible(!m_button[i].IsVisible());}
       m_list_view.Visible(false);
